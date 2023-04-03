@@ -6,14 +6,10 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.concurrent.TimeUnit;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -23,7 +19,6 @@ public class MyMainWindow extends JFrame {
 	private final int ROWS = 4;
 	private final int COLS = 4;
 
-	private Color original_button_color;
 	private Color selected_color_1;
 	private Color selected_color_2;
 
@@ -31,7 +26,7 @@ public class MyMainWindow extends JFrame {
 	private int[] selected_position2;
 
 	private Timer timer;
-	
+
 	private JPanel content_pane;
 	private JToggleButton[][] toggle_buttons;
 	private ArrayList<Color> mycolors;
