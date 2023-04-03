@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
+import javax.swing.Timer;
 
 public class MyMainWindow extends JFrame {
 	private final int ROWS = 4;
@@ -29,6 +30,8 @@ public class MyMainWindow extends JFrame {
 	private int[] selected_position1;
 	private int[] selected_position2;
 
+	private Timer timer;
+	
 	private JPanel content_pane;
 	private JToggleButton[][] toggle_buttons;
 	private ArrayList<Color> mycolors;
@@ -50,7 +53,7 @@ public class MyMainWindow extends JFrame {
 
 		// Init attributes
 		this.toggle_buttons = new JToggleButton[this.ROWS][this.COLS];
-		// this.original_button_color = this.toggle_buttons[0][0].getBackground();
+
 		// choosing 8 colors
 		this.mycolors = new ArrayList<Color>();
 		this.mycolors.add(Color.BLUE);
@@ -127,10 +130,17 @@ public class MyMainWindow extends JFrame {
 						toggle_buttons[selected_position1[0]][selected_position1[1]].setVisible(false);
 						toggle_buttons[selected_position2[0]][selected_position2[1]].setVisible(false);
 					} else {
-						toggle_buttons[selected_position1[0]][selected_position1[1]].setSelected(false);
-						toggle_buttons[selected_position2[0]][selected_position2[1]].setSelected(false);
-						toggle_buttons[selected_position1[0]][selected_position1[1]].setBackground(null);
-						toggle_buttons[selected_position2[0]][selected_position2[1]].setBackground(null);
+						timer = new Timer(1000, null);
+						timer.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								toggle_buttons[selected_position1[0]][selected_position1[1]].setSelected(false);
+								toggle_buttons[selected_position2[0]][selected_position2[1]].setSelected(false);
+								toggle_buttons[selected_position1[0]][selected_position1[1]].setBackground(null);
+								toggle_buttons[selected_position2[0]][selected_position2[1]].setBackground(null);
+								timer.stop();
+							}
+						});
+						timer.start();
 					}
 					selected_color_1 = Color.GRAY;
 					selected_color_2 = Color.DARK_GRAY;
