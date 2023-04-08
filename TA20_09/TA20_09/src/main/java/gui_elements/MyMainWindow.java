@@ -9,8 +9,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.Timer;
@@ -18,6 +21,8 @@ import javax.swing.Timer;
 public class MyMainWindow extends JFrame {
 	private final int ROWS = 4;
 	private final int COLS = 4;
+
+	private int try_counter;
 
 	private Color selected_color_1;
 	private Color selected_color_2;
@@ -31,6 +36,7 @@ public class MyMainWindow extends JFrame {
 	private JToggleButton[][] toggle_buttons;
 	private ArrayList<Color> mycolors;
 	private JPanel toggle_button_panel;
+	private JLabel label_try_counter;
 
 	private ItemListener action_button_pressed;
 
@@ -48,6 +54,7 @@ public class MyMainWindow extends JFrame {
 
 		// Init attributes
 		this.toggle_buttons = new JToggleButton[this.ROWS][this.COLS];
+		this.try_counter = 0;
 
 		// choosing 8 colors
 		this.mycolors = new ArrayList<Color>();
@@ -94,6 +101,9 @@ public class MyMainWindow extends JFrame {
 				this.toggle_buttons[i][j].addActionListener(this.createActionListener(i, j));
 			}
 		}
+		this.label_try_counter = new JLabel("Intentos: " + this.try_counter);
+		this.content_pane.add(label_try_counter);
+
 		// Add the panels to the frame
 		this.add(this.content_pane, BorderLayout.NORTH);
 		this.add(this.toggle_button_panel, BorderLayout.CENTER);
@@ -105,27 +115,21 @@ public class MyMainWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				if (selected_color_1 == Color.GRAY) {
+				if (selected_color_1 == Color.GRAY) { // First pick
 					selected_position1[0] = i;
 					selected_position1[1] = j;
 					selected_color_1 = mycolors.get(i * COLS + j);
 					toggle_buttons[i][j].setBackground(selected_color_1);
-				} else if (selected_color_2 == Color.DARK_GRAY) {
+				} else if (selected_color_2 == Color.DARK_GRAY) { // second pick
 					selected_position2[0] = i;
 					selected_position2[1] = j;
 					selected_color_2 = mycolors.get(i * COLS + j);
 					toggle_buttons[i][j].setBackground(selected_color_2);
-//					try {
-//						TimeUnit.SECONDS.sleep(1);
-//					} catch (InterruptedException e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					}
 					if (selected_color_1 == selected_color_2) {
 						toggle_buttons[selected_position1[0]][selected_position1[1]].setVisible(false);
 						toggle_buttons[selected_position2[0]][selected_position2[1]].setVisible(false);
 					} else {
-						timer = new Timer(1000, null);
+						timer = new Timer(1000, null); // we use a timer to let the user know what was picked
 						timer.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
 								toggle_buttons[selected_position1[0]][selected_position1[1]].setSelected(false);
@@ -137,15 +141,31 @@ public class MyMainWindow extends JFrame {
 						});
 						timer.start();
 					}
+					try_counter++;
+					label_try_counter.setText("Intentos: " + try_counter);
 					selected_color_1 = Color.GRAY;
 					selected_color_2 = Color.DARK_GRAY;
-				} else {
-
 				}
-
+				if (isGameFinished()) {
+					label_try_counter
+							.setText("Juego finalizado." + "   " + "Número de intentos totales: " + try_counter);
+					JOptionPane.showMessageDialog(null, "Enhorabuena");
+				}
 			}
 		};
 		return listener;
+	}
+
+	public boolean isGameFinished() {
+		// check if everything is visible or not
+		for (int i = 0; i < toggle_buttons.length; i++) {
+			for (int j = 0; j < toggle_buttons[i].length; j++) {
+				if (toggle_buttons[i][j].isVisible() == true) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 }
